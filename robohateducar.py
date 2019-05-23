@@ -1,4 +1,4 @@
-from time import sleep, monotonic
+from time import sleep, monotonic_ns
 import board
 import pulseio
 
@@ -158,7 +158,7 @@ class RoboHatEduCar(object):
             command, enc_distance, start_pos_left, start_pos_right))
 
         while distance_reached is False:
-            start_time = monotonic()
+            start_time = monotonic_ns()
             pos_left, pos_right = self._get_wheel_positions()
             abs_distance_left = abs(pos_left - start_pos_left)
             abs_distance_right = abs(pos_right - start_pos_right)
@@ -177,11 +177,11 @@ class RoboHatEduCar(object):
                  ctrl_state_right == RoboHatEduCar.ST_TARGET_REACHED):
                 distance_reached = True
 
-            duration = monotonic() - start_time
+            duration = monotonic_ns() - start_time
             # print("duration: {}".format(duration))
             # print("left pos: {} st: {} dc: {}, right pos: {} st:{} dc:{}".format(
             #    pos_left, ctrl_state_left, duty_cycle_left, pos_right, ctrl_state_right, duty_cycle_right))
-            duration = monotonic() - start_time
+            duration = monotonic_ns() - start_time
             if duration <= 0.009:
                 sleep(0.01 - duration/1e9)
 
@@ -313,7 +313,7 @@ class EduCarTurtle(object):
         Move the turtle forward by the specified distance, in the direction
         the turtle is headed.
         """
-        self.car.drive(RoboHatEduCar.CMD_DRV_FORWARD, distance=distance)
+        self.car.drive(RoboHatEduCar.CMD_DRV_FORWARD, distance)
 
     def back(self, distance):
         """Move the turtle backward by distance.
@@ -323,7 +323,7 @@ class EduCarTurtle(object):
         Move the turtle backward by distance ,opposite to the direction the
         turtle is headed. Do not change the turtle's heading.
         """
-        self.car.drive(RoboHatEduCar.CMD_DRV_BACKWARD, distance=distance)
+        self.car.drive(RoboHatEduCar.CMD_DRV_BACKWARD, distance)
 
     def left(self, angle):
         """Turn turtle left by angle units.
